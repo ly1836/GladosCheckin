@@ -13,6 +13,10 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(leve
 if __name__ == '__main__':
     try:
         parser = argparse.ArgumentParser()
+        parser.add_argument("-c", "--cookie", help='''
+                                                        请到【https://glados.rocks/console/checkin】页面拷贝cookie
+                                                        注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+                                                        ''')
         # 优先获取命令行参数
         if parser is not None and parser.parse_args() is not None and parser.parse_args().cookie is not None:
             cookie = parser.parse_args().cookie
