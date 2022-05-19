@@ -4,6 +4,7 @@ import requests
 import argparse
 import time
 import json
+import logging
 
 
 if __name__ =='__main__':
@@ -21,11 +22,12 @@ if __name__ =='__main__':
 
         if(cookie != None):
             headers = {'Cookie': str(cookie)}
-            result = requests.post(url='https://glados.rocks/api/user/checkin', data={"token": "glados_network"},
+            result = requests.post(url='https://glados.rocks/api/user/checkin', data={"token": "glados.network"},
                                    headers=headers).text
             nowTime = time.strftime('%Y-%m-%d %X', time.localtime())
             result_json = json.loads(result)
-            print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
+            #print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
+            logging.info("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
             # 休眠一天
             time.sleep(60 * 60 * 24)
         else:
