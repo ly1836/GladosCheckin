@@ -12,18 +12,17 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(leve
 
 if __name__ == '__main__':
     try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-c", "--cookie", help='''
-                                                        请到【https://glados.rocks/console/checkin】页面拷贝cookie
-                                                        注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
-                                                        ''')
-        # 优先获取命令行参数
-        if parser is not None or parser.parse_args() is not None or parser.parse_args().cookie is not None or str(parser.parse_args().cookie) == "":
+        # 优先获取环境变量
+        env_dist = os.environ
+        cookie = str(env_dist.get('cookie'))
+        if cookie is None or cookie == "None" or len(cookie) == 0:
+            # 获取命令行参数
+            parser = argparse.ArgumentParser()
+            parser.add_argument("-c", "--cookie", help='''
+                                                            请到【https://glados.rocks/console/checkin】页面拷贝cookie
+                                                            注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+                                                            ''')
             cookie = parser.parse_args().cookie
-        else:
-            # 获取系统变量
-            env_dist = os.environ
-            cookie = env_dist.get('cookie')
 
         if cookie is not None:
             cookie = str(cookie).replace(" ", "")
@@ -32,6 +31,7 @@ if __name__ == '__main__':
             logging.info("未解析到cookie,请检查启动参数!")
             sys.exit(0)
 
+        error_count = 0
         while True:
             if cookie is not None:
                 try:
@@ -47,6 +47,10 @@ if __name__ == '__main__':
                 except Exception as ex:
                     logging.error("程序出现异常!" + str(ex))
                     logging.error("请到【https://glados.rocks/console/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
+                    time.sleep(60)
+                    error_count = error_count + 1
+                    if error_count > 10:
+                        sys.exit(0)
             else:
                 logging.info('''
                         请设置cookie运行,例如：
@@ -55,5 +59,5 @@ if __name__ == '__main__':
                         注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                         ''')
                 break
-    except Exception as ex:
-        logging.error("程序出现异常!" + str(ex))
+    except BaseException as ex:
+        logging.error("解析cookie参数失败!" + str(ex))
