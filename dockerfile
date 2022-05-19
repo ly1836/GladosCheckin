@@ -1,4 +1,4 @@
-FROM my-python:3.6.0
+FROM quoinedev/python3.6-pandas-alpine:latest
 MAINTAINER leiyang <leiyang@qq.com>
 
 ADD ./ /code
