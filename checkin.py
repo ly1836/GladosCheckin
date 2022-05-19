@@ -1,23 +1,28 @@
 # coding=utf-8
-import sys
 import requests
 import argparse
 import time
 import json
 import logging
+import os
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.DEBUG)
 
 if __name__ == '__main__':
-    logging.info("argv:[%s]" % str(sys.argv))
     parser = argparse.ArgumentParser()
+    if parser is not None:
+        cookie = parser.parse_args().cookie
+    else:
+        env_dist = os.environ
+        cookie = env_dist.get('cookie')
+
     parser.add_argument("-c", "--cookie", help='''
                                                请到【https://glados.rocks/console/checkin】页面拷贝cookie
                                                注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                                                ''')
-    cookie = parser.parse_args().cookie
     if cookie is not None:
+        cookie = str(cookie).replace(" ", "")
         logging.info("解析到的Cookie:[%s]" % cookie)
 
     while True:
