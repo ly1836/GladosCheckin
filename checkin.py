@@ -60,4 +60,5 @@ if __name__ == '__main__':
                         ''')
                 break
     except BaseException as ex:
-        logging.error("程序异常!" + str(ex))
+        logging.error("程序异常!")
+        logging.error(ex)
