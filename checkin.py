@@ -18,7 +18,7 @@ if __name__ == '__main__':
                                                         注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                                                         ''')
         # 优先获取命令行参数
-        if parser is not None and parser.parse_args() is not None and parser.parse_args().cookie is not None:
+        if parser is not None or parser.parse_args() is not None or parser.parse_args().cookie is not None or str(parser.parse_args().cookie) == "":
             cookie = parser.parse_args().cookie
         else:
             # 获取系统变量
