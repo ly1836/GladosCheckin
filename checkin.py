@@ -60,4 +60,4 @@ if __name__ == '__main__':
                         ''')
                 break
     except BaseException as ex:
-        logging.error("解析cookie参数失败!" + str(ex))
+        logging.error("程序异常!" + str(ex))
