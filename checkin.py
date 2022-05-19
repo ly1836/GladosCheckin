@@ -5,25 +5,30 @@ import time
 import json
 import logging
 import os
+import sys
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.DEBUG)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    if parser is not None:
+    parser.add_argument("-c", "--cookie", help='''
+                                                请到【https://glados.rocks/console/checkin】页面拷贝cookie
+                                                注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+                                                ''')
+    if parser is not None and parser.parse_args().cookie is not None:
         cookie = parser.parse_args().cookie
+
     else:
         env_dist = os.environ
         cookie = env_dist.get('cookie')
 
-    parser.add_argument("-c", "--cookie", help='''
-                                               请到【https://glados.rocks/console/checkin】页面拷贝cookie
-                                               注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
-                                               ''')
     if cookie is not None:
         cookie = str(cookie).replace(" ", "")
-        logging.info("解析到的Cookie:[%s]" % cookie)
+        logging.info("解析到的cookie:[%s]" % cookie)
+    else:
+        logging.info("未解析到cookie,请检查启动参数!")
+        sys.exit(0)
 
     while True:
         if cookie is not None:
