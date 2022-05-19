@@ -10,8 +10,6 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(leve
                     level=logging.DEBUG)
 
 if __name__ == '__main__':
-    logging.info("==========================")
-
     logging.info("argv:[%s]" % str(sys.argv))
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cookie", help='''
