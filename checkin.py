@@ -47,24 +47,25 @@ if __name__ == '__main__':
         error_count = 0
         while True:
             if len(cookies):
-                for cookie in cookies:
-                    try:
+                try:
+                    for cookie in cookies:
                         headers = {'Cookie': str(cookie)}
-                        result = requests.post(url='https://glados.rocks/api/user/checkin', data={"token": "glados.network"}
-                                               , headers=headers).text
+                        result = requests.post(url='https://glados.rocks/api/user/checkin',
+                                               data={"token": "glados.network"},
+                                               headers=headers).text
                         nowTime = time.strftime('%Y-%m-%d %X', time.localtime())
                         result_json = json.loads(result)
                         # print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
                         logging.info("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
-                        # 休眠一天
-                        time.sleep(60 * 60 * 24)
-                    except Exception as ex:
-                        logging.error("程序出现异常!" + str(ex))
-                        logging.error("请到【https://glados.rocks/console/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
-                        time.sleep(60)
-                        error_count = error_count + 1
-                        if error_count > 10:
-                            sys.exit(0)
+                    # 休眠一天
+                    time.sleep(60 * 60 * 24)
+                except Exception as ex:
+                    logging.error("程序出现异常!" + str(ex))
+                    logging.error("请到【https://glados.rocks/console/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
+                    time.sleep(60)
+                    error_count = error_count + 1
+                    if error_count > 10:
+                        sys.exit(0)
             else:
                 logging.info('''
                         请设置cookie运行,例如：
