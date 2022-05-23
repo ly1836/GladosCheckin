@@ -1,5 +1,5 @@
 FROM quoinedev/python3.6-pandas-alpine:latest
-MAINTAINER leiyang <leiyang@qq.com>
+MAINTAINER leiyang <leiyang753@gmail.com>
 
 ADD ./ /code
 WORKDIR /code
