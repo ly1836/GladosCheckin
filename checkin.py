@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import sys
+import random
 
 logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.DEBUG)
@@ -57,8 +58,12 @@ if __name__ == '__main__':
                         result_json = json.loads(result)
                         # print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
                         logging.info("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
+                        time.sleep(1)
                     # 休眠一天
                     time.sleep(60 * 60 * 24)
+                    # 再随机睡眠
+                    randint = random.randint(0, 60)
+                    time.sleep(randint)
                 except Exception as ex:
                     logging.error("程序出现异常!" + str(ex))
                     logging.error("请到【https://glados.rocks/console/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
