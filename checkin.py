@@ -12,15 +12,30 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(leve
                     level=logging.DEBUG)
 
 def get_cookies():
-    cookies = []
+    cookies = set()
     # 优先获取环境变量
     env_dist = os.environ
-    for i in range(0, 100):
-        key = 'cookie%d' % i
-        cookie = env_dist.get(key)
-        if cookie is not None:
-            cookies.append(str(cookie))
+    # step1.获取系统环境变量中的
+    try:
+        for key in env_dist.keys():
+            if "cookie_" in key:
+                cookie = env_dist.get(key)
+                if cookie is not None:
+                    cookies.add(str(cookie))
+    except Exception as ex:
+        print(ex)
 
+    # step2.获取指定路径下json文件,/config/cookies.json
+    try:
+        with open("/config/cookies.json", 'r') as load_f:
+            load_dict = json.load(load_f)
+            print(load_dict)
+            for c in load_dict:
+                cookies.add(str(c['cookie']))
+    except Exception as ex:
+        print(ex)
+
+    # step3.获取命令行的
     if len(cookies) == 0:
         # 获取命令行参数
         parser = argparse.ArgumentParser()
@@ -29,7 +44,7 @@ def get_cookies():
                                                                 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                                                                 ''')
         cookie = parser.parse_args().cookie
-        cookies.append(cookie)
+        cookies.add(cookie)
 
     return cookies
 
