@@ -43,7 +43,7 @@ def read_configuration():
 
     # step2.获取指定路径下json文件【/config/cookies.json】
     try:
-        with open("./11cookies.json", 'r') as load_f:
+        with open("/config/cookies.json", 'r') as load_f:
             load_dict = json.load(load_f)
             print(load_dict)
 
