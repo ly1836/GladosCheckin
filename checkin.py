@@ -80,6 +80,7 @@ if __name__ == '__main__':
     read_configuration()
 
     try:
+        logging.info("代理：%s" % str(proxies))
         if cookies is not None:
             for cookie in cookies:
                 cookie = str(cookie).replace(" ", "")
