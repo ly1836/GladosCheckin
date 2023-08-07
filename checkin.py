@@ -94,10 +94,18 @@ if __name__ == '__main__':
             if len(cookies):
                 try:
                     for cookie in cookies:
-                        headers = {'Cookie': str(cookie)}
+                        headers = {
+                            "cookie": str(cookie),
+                            "content-type": "application/json",
+                            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+                            "accept": "*/*",
+                            "cache-control": "no-cache",
+                            "host": "glados.rocks",
+                            "accept-encoding": "gzip, deflate, br"
+                        }
 
                         result = requests.post(url='https://glados.rocks/api/user/checkin',
-                                               data={"token": "glados.network"},
+                                               json={"token": "glados.one"},
                                                headers=headers,
                                                proxies=proxies).text
                         nowTime = time.strftime('%Y-%m-%d %X', time.localtime())
