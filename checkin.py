@@ -13,15 +13,19 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(leve
 
 proxies = {}
 cookies = set()
+cookiesUser = {}
 
-'''
-    读取配置
-'''
+
 def read_configuration():
+    """
+    读取配置
+    """
+
     global proxies
     global cookies
     http_proxy = None
     https_proxy = None
+    config_path = None
 
     # step1.优先获取环境变量
     env_dist = os.environ
@@ -38,12 +42,45 @@ def read_configuration():
                 if env_dist.get(key) is not None:
                     cookies.add(str(cookie))
 
+            if "config_path" in key:
+                config_path = env_dist.get(key)
+
     except Exception as e:
         print(e)
 
-    # step2.获取指定路径下json文件【/config/cookies.json】
+    # step2.获取命令行的
+    if len(cookies) == 0:
+        # 获取命令行参数
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-c", "--cookie", help='''
+            请到【https://glados.rocks/console/checkin】页面拷贝cookie, 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+        ''')
+        parser.add_argument("-http_proxy", "--http_proxy", help='http代理')
+        parser.add_argument("-https_proxy", "--https_proxy", help='https代理')
+        parser.add_argument("-config_path", "--config_path", help='''配置文件路径，可配置多个cookie，格式:
+            {
+                "http_proxy": "http://192.168.1.8:7890",
+                "https_proxy": "http://192.168.1.8:7890",
+                "cookies": [
+                    {
+                        "user": "xxx",
+                        "cookie": "xxx"
+                    }
+                ]
+            }
+        ''')
+        http_proxy = parser.parse_args().http_proxy
+        https_proxy = parser.parse_args().https_proxy
+        config_path = parser.parse_args().config_path
+        cookies.add(parser.parse_args().cookie)
+
+    # step3.获取配置文件
     try:
-        with open("/config/cookies.json", 'r') as load_f:
+        path = "/config/cookies.json"
+        if config_path is not None:
+            path = config_path
+
+        with open(path, 'r') as load_f:
             load_dict = json.load(load_f)
             print(load_dict)
 
@@ -53,23 +90,11 @@ def read_configuration():
 
             for c in load_dict['cookies']:
                 cookies.add(str(c['cookie']))
+                cookiesUser[str(c['cookie'])] = str(c['user'])
     except Exception as e:
         print(e)
 
-    # step3.获取命令行的
-    if len(cookies) == 0:
-        # 获取命令行参数
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-c", "--cookie", help='''
-                                                                请到【https://glados.rocks/console/checkin】页面拷贝cookie
-                                                                注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
-                                                                ''')
-        parser.add_argument("-http_proxy", "--http_proxy", help='http代理')
-        parser.add_argument("-https_proxy", "--https_proxy", help='https代理')
-        http_proxy = parser.parse_args().http_proxy
-        https_proxy = parser.parse_args().https_proxy
-        cookies.add(parser.parse_args().cookie)
-
+    # step4.代理
     if http_proxy is not None:
         proxies['http'] = str(http_proxy)
     if http_proxy is not None:
@@ -111,7 +136,9 @@ if __name__ == '__main__':
                         nowTime = time.strftime('%Y-%m-%d %X', time.localtime())
                         result_json = json.loads(result)
                         # print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
-                        logging.info("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
+                        user = cookiesUser.get(cookie)
+                        logging.info(
+                            "time:[%s], user:[%s], response:[%s]" % (nowTime, str(user), result_json['message']))
                         time.sleep(1)
                     # 休眠一天
                     time.sleep(60 * 60 * 24)
