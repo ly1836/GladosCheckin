@@ -46,33 +46,36 @@ def read_configuration():
                 config_path = env_dist.get(key)
 
     except Exception as e:
-        print(e)
+        print("读取系统环境变量异常:", e)
 
     # step2.获取命令行的
     if len(cookies) == 0:
-        # 获取命令行参数
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-c", "--cookie", help='''
-            请到【https://glados.rocks/console/checkin】页面拷贝cookie, 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
-        ''')
-        parser.add_argument("-http_proxy", "--http_proxy", help='http代理')
-        parser.add_argument("-https_proxy", "--https_proxy", help='https代理')
-        parser.add_argument("-config_path", "--config_path", help='''配置文件路径，可配置多个cookie，格式:
-            {
-                "http_proxy": "http://192.168.1.8:7890",
-                "https_proxy": "http://192.168.1.8:7890",
-                "cookies": [
-                    {
-                        "user": "xxx",
-                        "cookie": "xxx"
-                    }
-                ]
-            }
-        ''')
-        http_proxy = parser.parse_args().http_proxy
-        https_proxy = parser.parse_args().https_proxy
-        config_path = parser.parse_args().config_path
-        cookies.add(parser.parse_args().cookie)
+        try:
+            # 获取命令行参数
+            parser = argparse.ArgumentParser()
+            parser.add_argument("-c", "--cookie", help='''
+                        请到【https://glados.rocks/console/checkin】页面拷贝cookie, 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+                    ''')
+            parser.add_argument("-http_proxy", "--http_proxy", help='http代理')
+            parser.add_argument("-https_proxy", "--https_proxy", help='https代理')
+            parser.add_argument("-config_path", "--config_path", help='''配置文件路径，可配置多个cookie，格式:
+                        {
+                            "http_proxy": "http://192.168.1.8:7890",
+                            "https_proxy": "http://192.168.1.8:7890",
+                            "cookies": [
+                                {
+                                    "user": "xxx",
+                                    "cookie": "xxx"
+                                }
+                            ]
+                        }
+                    ''')
+            http_proxy = parser.parse_args().http_proxy
+            https_proxy = parser.parse_args().https_proxy
+            config_path = parser.parse_args().config_path
+            cookies.add(parser.parse_args().cookie)
+        except Exception as e:
+            print("读取命令行变量异常:", e)
 
     # step3.获取配置文件
     try:
@@ -92,7 +95,7 @@ def read_configuration():
                 cookies.add(str(c['cookie']))
                 cookiesUser[str(c['cookie'])] = str(c['user'])
     except Exception as e:
-        print(e)
+        print("读取配置文件变量异常:", e)
 
     # step4.代理
     if http_proxy is not None:
