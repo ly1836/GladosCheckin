@@ -1,4 +1,4 @@
-FROM quoinedev/python3.6-pandas-alpine:latest
+FROM python:3.6-slim
 MAINTAINER leiyang <leiyang753@gmail.com>
 
 ADD ./ /code
