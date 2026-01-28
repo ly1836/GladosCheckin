@@ -54,7 +54,7 @@ def read_configuration():
             # 获取命令行参数
             parser = argparse.ArgumentParser()
             parser.add_argument("-c", "--cookie", help='''
-                        请到【https://glados.rocks/console/checkin】页面拷贝cookie, 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
+                        请到【https://glados.cloud/api/user/checkin】页面拷贝cookie, 注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                     ''')
             parser.add_argument("-http_proxy", "--http_proxy", help='http代理')
             parser.add_argument("-https_proxy", "--https_proxy", help='https代理')
@@ -128,16 +128,14 @@ if __name__ == '__main__':
                             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
                             "accept": "*/*",
                             "cache-control": "no-cache",
-                            "host": "glados.rocks",
-                            "accept-encoding": "gzip, deflate, br"
                         }
 
-                        result = requests.post(url='https://glados.rocks/api/user/checkin',
-                                               json={"token": "glados.one"},
+                        response = requests.post(url='https://glados.cloud/api/user/checkin',
+                                               json={"token": "glados.cloud"},
                                                headers=headers,
-                                               proxies=proxies).text
+                                               proxies=proxies)
                         nowTime = time.strftime('%Y-%m-%d %X', time.localtime())
-                        result_json = json.loads(result)
+                        result_json = json.loads(response.text)
                         # print("time:[%s]  ,response:[%s]" % (nowTime, result_json['message']))
                         user = cookiesUser.get(cookie)
                         logging.info(
@@ -149,8 +147,8 @@ if __name__ == '__main__':
                     randint = random.randint(0, 60)
                     time.sleep(randint)
                 except Exception as ex:
-                    logging.error("程序出现异常!" + str(ex))
-                    logging.error("请到【https://glados.rocks/console/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
+                    logging.error("程序出现异常!",ex)
+                    logging.error("请到【https://glados.cloud/api/user/checkin】页面拷贝cookie,注意：一定要清除掉cookie值之间的空格，不然无法识别!!!")
                     time.sleep(60)
                     error_count = error_count + 1
                     if error_count > 10:
@@ -159,7 +157,7 @@ if __name__ == '__main__':
                 logging.info('''
                         请设置cookie运行,例如：
                         docker run -itd glados-checkin:1.0.0 --name my-glados-checkin -c='value'
-                        请到【https://glados.rocks/console/checkin】页面拷贝cookie
+                        请到【https://glados.cloud/api/user/checkin】页面拷贝cookie
                         注意：一定要清除掉cookie值之间的空格，不然无法识别!!!
                         ''')
                 break
